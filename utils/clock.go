@@ -5,15 +5,19 @@ import (
 )
 
 type Clock interface {
-	Now() time.Time
+	Now() time.Duration
 }
 
-type realClock struct{}
-
-func (realClock) Now() time.Time {
-	return time.Now()
+type Timer struct {
+	startTime time.Time
 }
 
-func NewClock() Clock {
-	return &realClock{}
+func NewTimer() Clock {
+	return &Timer{
+		startTime: time.Now(),
+	}
+}
+
+func (r *Timer) Now() time.Duration {
+	return time.Since(r.startTime)
 }

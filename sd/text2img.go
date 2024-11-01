@@ -29,11 +29,11 @@ type TextToImageResponse struct {
 }
 
 type Images struct {
-	Image [][]byte
+	Images [][]byte
 }
 
 func (img *Images) AppendImage(newData []byte) {
-	img.Image = append(img.Image, newData)
+	img.Images = append(img.Images, newData)
 }
 
 type TextToImageRequest struct {
@@ -106,6 +106,7 @@ func TextToImage(prompt string) (*TextToImageResponse, error) {
 		Steps:          25,
 		CfgScale:       7.5,
 		SamplerName:    "Euler a",
+		Scheduler:      "Automatic",
 	}
 
 	resp, err := client.R().
@@ -125,7 +126,7 @@ func TextToImage(prompt string) (*TextToImageResponse, error) {
 		log.WithError(err).Error("Failed to unmarshal text2image body response.")
 		return nil, err
 	}
-
+	//fmt.Println(generateResponse.Info)
 	infoStruct := &jsonInfoResponse{}
 	err = json.Unmarshal([]byte(generateResponse.Info), infoStruct)
 	if err != nil {

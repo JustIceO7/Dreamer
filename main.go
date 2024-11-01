@@ -44,7 +44,7 @@ func main() {
 	})
 
 	// Listens to Messages
-	s.Identify.Intents = discordgo.IntentsGuildMessages
+	//s.Identify.Intents = discordgo.IntentsGuildMessages
 	//s.AddHandler(messageHandler)
 
 	// Register Slash and Component Commands
@@ -53,6 +53,9 @@ func main() {
 	// Connecting to Discord Server Gateway
 	s.Open()
 	log.Info("Bot is initialising")
+	// Goroutines which handles image generation queue
+	go commands.StableDiffusionScheduler()
+	go commands.UpdateQueueStatus()
 	sc := make(chan os.Signal, 1)
 	signal.Notify(sc, syscall.SIGINT, syscall.SIGTERM)
 	<-sc
@@ -60,6 +63,7 @@ func main() {
 	s.Close()
 }
 
+/**
 func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 	log.Info("Received message: " + m.Content + " from: " + m.Author.Username)
 	// If message is sent from the bot
@@ -71,3 +75,4 @@ func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		s.ChannelMessageSend(m.ChannelID, "World!")
 	}
 }
+**/

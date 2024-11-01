@@ -1,2 +1,2 @@
-https://github.com/JustIceO7/whodis
+https://github.com/UCCNetsoc/whodis
 https://github.com/AndBobsYourUncle/stable-diffusion-discord-bot

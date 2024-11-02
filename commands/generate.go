@@ -86,12 +86,15 @@ func UpdateQueueStatus() {
 		pos := 1
 		for i := len(currentQueue) - 1; i >= 0; i-- {
 			cmd := currentQueue[i]
-			changedMessage := cmd.Interaction.Member.Mention() + " Image generation in progress! Your position in queue **#" + strconv.Itoa(pos) + "**"
-			_, err := cmd.Session.InteractionResponseEdit(cmd.Interaction.Interaction, &discordgo.WebhookEdit{
-				Content: &changedMessage,
-			})
-			if err != nil {
-				log.WithError(err).Error("Failed to edit interaction response.")
+			if cmd.PositionInQueue != pos {
+				changedMessage := cmd.Interaction.Member.Mention() + " Image generation in progress! Your position in queue **#" + strconv.Itoa(pos) + "**"
+				_, err := cmd.Session.InteractionResponseEdit(cmd.Interaction.Interaction, &discordgo.WebhookEdit{
+					Content: &changedMessage,
+				})
+				if err != nil {
+					log.WithError(err).Error("Failed to edit interaction response.")
+				}
+				cmd.PositionInQueue = pos
 			}
 			pos++
 		}

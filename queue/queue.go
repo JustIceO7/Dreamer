@@ -8,10 +8,11 @@ import (
 
 // Structure of each item
 type Command struct {
-	Session     *discordgo.Session
-	Interaction *discordgo.InteractionCreate
-	Prompt      string
-	Priority    float64
+	Session         *discordgo.Session
+	Interaction     *discordgo.InteractionCreate
+	Prompt          string
+	Priority        float64
+	PositionInQueue int
 }
 
 // PriorityQueue for image generation commands

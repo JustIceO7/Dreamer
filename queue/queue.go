@@ -15,6 +15,16 @@ type Command struct {
 	PositionInQueue int
 }
 
+// Returns PositionInQueue
+func (c *Command) GetPositionInQueue() int {
+	return c.PositionInQueue
+}
+
+// Sets value for PositionInQueue
+func (c *Command) SetPositionInQueue(pos int) {
+	c.PositionInQueue = pos
+}
+
 // PriorityQueue for image generation commands
 type PriorityQueue struct {
 	queue        []Command

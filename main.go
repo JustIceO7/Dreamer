@@ -4,6 +4,7 @@ import (
 	"Dreamer/api"
 	"Dreamer/commands"
 	"Dreamer/config"
+	"Dreamer/handlers"
 	"flag"
 	"os"
 	"os/signal"
@@ -43,9 +44,8 @@ func main() {
 		log.Info("Bot has registered handlers")
 	})
 
-	// Listens to Messages
-	//s.Identify.Intents = discordgo.IntentsGuildMessages
-	//s.AddHandler(messageHandler)
+	// Configuring Intents and Adding Handlers
+	handlers.HandlerConfig(s)
 
 	// Register Slash and Component Commands
 	commands.RegisterSlashCommands(s)
@@ -53,7 +53,8 @@ func main() {
 	// Connecting to Discord Server Gateway
 	s.Open()
 	log.Info("Bot is initialising")
-	// Goroutines which handles image generation queue
+
+	// Go-routines for Image Generation and Queuing
 	go commands.StableDiffusionScheduler()
 	go commands.UpdateQueueStatus()
 	sc := make(chan os.Signal, 1)
@@ -62,17 +63,3 @@ func main() {
 	log.Info("Cleanly exiting")
 	s.Close()
 }
-
-/**
-func messageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
-	log.Info("Received message: " + m.Content + " from: " + m.Author.Username)
-	// If message is sent from the bot
-	if m.Author.ID == s.State.User.ID {
-		return
-	}
-
-	if m.Content == "Hello" {
-		s.ChannelMessageSend(m.ChannelID, "World!")
-	}
-}
-**/

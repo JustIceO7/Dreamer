@@ -1,2 +1,3 @@
 https://github.com/UCCNetsoc/whodis
 https://github.com/AndBobsYourUncle/stable-diffusion-discord-bot
+NQN Discord Bot

@@ -103,7 +103,7 @@ func TextToImage(prompt string) (*TextToImageResponse, error) {
 		NegativePrompt: "",
 		Width:          1024,
 		Height:         1024,
-		Steps:          25,
+		Steps:          2,
 		CfgScale:       7.5,
 		SamplerName:    "Euler a",
 		Scheduler:      "Automatic",

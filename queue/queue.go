@@ -27,10 +27,11 @@ func (c *Command) SetPositionInQueue(pos int) {
 
 // PriorityQueue for image generation commands
 type PriorityQueue struct {
-	queue        []Command
-	mu           sync.Mutex
-	ImageNotify  chan struct{}
-	UpdateNotify chan struct{}
+	currentCommand *Command
+	queue          []Command
+	mu             sync.Mutex
+	ImageNotify    chan struct{}
+	UpdateNotify   chan struct{}
 }
 
 // Return length of priority queue
@@ -65,17 +66,17 @@ func (pq *PriorityQueue) Enqueue(s *discordgo.Session, i *discordgo.InteractionC
 }
 
 // Dequeues next command from priority queue
-func (pq *PriorityQueue) Dequeue() (Command, bool) {
+func (pq *PriorityQueue) Dequeue() *Command {
 	pq.mu.Lock()
 	defer pq.mu.Unlock()
 
 	if len(pq.queue) > 0 {
 		command := pq.queue[len(pq.queue)-1]
 		pq.queue = pq.queue[:len(pq.queue)-1]
-		return command, true
+		pq.currentCommand = &command
+		return &command
 	}
-
-	return Command{}, false
+	return nil
 }
 
 // Notifies image channel
@@ -109,9 +110,10 @@ func (pq *PriorityQueue) Peek() *Command {
 // Creates and returns an instance of a PriorityQueue
 func NewPriorityQueue() *PriorityQueue {
 	pq := &PriorityQueue{
-		queue:        make([]Command, 0),
-		ImageNotify:  make(chan struct{}, 1),
-		UpdateNotify: make(chan struct{}, 1),
+		currentCommand: nil,
+		queue:          make([]Command, 0),
+		ImageNotify:    make(chan struct{}, 1),
+		UpdateNotify:   make(chan struct{}, 1),
 	}
 	return pq
 }
@@ -121,4 +123,18 @@ func (pq *PriorityQueue) CurrentQueue() []Command {
 	pq.mu.Lock()
 	defer pq.mu.Unlock()
 	return pq.queue
+}
+
+// Adds task to command
+func (pq *PriorityQueue) SetCurrentCommand(cmd *Command) {
+	pq.mu.Lock()
+	defer pq.mu.Unlock()
+	pq.currentCommand = cmd
+}
+
+// Returns current command
+func (pq *PriorityQueue) GetCurrentCommand() *Command {
+	pq.mu.Lock()
+	defer pq.mu.Unlock()
+	return pq.currentCommand
 }

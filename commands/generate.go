@@ -59,6 +59,7 @@ func StableDiffusionScheduler() {
 		<-imageQueue.ImageNotify
 		log.Info("Generating image...")
 		if cmd := imageQueue.Peek(); cmd != nil {
+			imageQueue.Dequeue()
 			err := sd.StableDiffusionInit(cmd.Session, cmd.Interaction, cmd.Prompt)
 			if err != nil {
 				errorMessage := cmd.Interaction.Member.Mention() + " Whoopsies Stable Diffusion API **Crashed/Doesn't Exist** :P"
@@ -72,7 +73,7 @@ func StableDiffusionScheduler() {
 				log.WithError(err).Error("Error occured trying to generate image.")
 			}
 		}
-		imageQueue.Dequeue()
+		imageQueue.SetCurrentCommand(nil)
 		imageQueue.NotifyImageWorker()
 		imageQueue.NotifyUpdateWorker()
 	}
@@ -84,19 +85,27 @@ func UpdateQueueStatus() {
 		<-imageQueue.UpdateNotify
 		currentQueue := imageQueue.CurrentQueue()
 		pos := 1
+		if cmd := imageQueue.GetCurrentCommand(); cmd != nil {
+			UpdateQueueMessage(cmd, pos)
+			pos++
+		}
 		for i := len(currentQueue) - 1; i >= 0; i-- {
 			cmd := currentQueue[i]
 			if cmd.GetPositionInQueue() != pos {
-				changedMessage := cmd.Interaction.Member.Mention() + " Image generation in progress! Your position in queue **#" + strconv.Itoa(pos) + "**"
-				_, err := cmd.Session.InteractionResponseEdit(cmd.Interaction.Interaction, &discordgo.WebhookEdit{
-					Content: &changedMessage,
-				})
-				if err != nil {
-					log.WithError(err).Error("Failed to edit interaction response.")
-				}
-				cmd.SetPositionInQueue(pos)
+				UpdateQueueMessage(&cmd, pos)
 			}
 			pos++
 		}
 	}
+}
+
+func UpdateQueueMessage(cmd *queue.Command, pos int) {
+	changedMessage := cmd.Interaction.Member.Mention() + " Image generation in progress! Your position in queue **#" + strconv.Itoa(pos) + "**"
+	_, err := cmd.Session.InteractionResponseEdit(cmd.Interaction.Interaction, &discordgo.WebhookEdit{
+		Content: &changedMessage,
+	})
+	if err != nil {
+		log.WithError(err).Error("Failed to edit interaction response.")
+	}
+	cmd.SetPositionInQueue(pos)
 }

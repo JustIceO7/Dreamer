@@ -3,6 +3,9 @@ Discord Bot written in Go to generate images through Automatic1111 API from http
 
 ## Setup
 Clone this repository.
+```
+git clone https://github.com/JustIceO7/Dreamer.git
+```
 
 Install Go https://golang.org/dl/.
 

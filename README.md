@@ -1,5 +1,9 @@
 # Dreamer (Stable Diffusion Discord Bot)
-Discord Bot written in Go to generate images through Automatic1111 API from https://github.com/AUTOMATIC1111/stable-diffusion-webui.
+Discord Bot written in Golang to generate images through Automatic1111 API from https://github.com/AUTOMATIC1111/stable-diffusion-webui.
+
+## Queue System
+
+This bot uses a queue system to manage image generation tasks. All requests are processed in the order they are received.
 
 ## Setup
 1. Clone this repository:
@@ -7,7 +11,7 @@ Discord Bot written in Go to generate images through Automatic1111 API from http
 git clone https://github.com/JustIceO7/Dreamer.git
 ```
 
-2. Install Go https://golang.org/dl/ (requires version > 1.23.1).
+2. Install Golang https://golang.org/dl/ (requires Golang version >1.23.1).
 
 3. Create a .env file in the root directory with:
 ```
@@ -15,6 +19,7 @@ export discord_token=your_discord_token
 export discord_app_id=your_app_id
 export master=your_discord_id
 ```
+**Note:** Users listed as `master` in `.env` have priority in the queue.
 
 4. Ensure Automatic1111 is running with the `--api flag`.
 

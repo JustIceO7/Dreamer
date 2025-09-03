@@ -27,10 +27,9 @@ func MessageHandler(s *discordgo.Session, m *discordgo.MessageCreate) {
 		firstWord := messageContent[0:spaceIndex]
 		switch firstWord {
 		case prefix:
-			s.ChannelMessageSend(m.ChannelID, "type `&help` to open help menu.") // invalid prefix command
+			s.ChannelMessageSend(m.ChannelID, "type `"+prefix+"help` to open help menu.") // invalid prefix command
 		case prefix + "help":
 			HelpEmbedding(s, m)
 		}
 	}
-
 }

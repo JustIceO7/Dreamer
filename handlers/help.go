@@ -1,13 +1,16 @@
 package handlers
 
-import "github.com/bwmarrin/discordgo"
+import (
+	"github.com/bwmarrin/discordgo"
+	"github.com/spf13/viper"
+)
 
 // HelpEmbedding creates the embedding for the help menu
 func HelpEmbedding(s *discordgo.Session, m *discordgo.MessageCreate) {
 	botAvatarURL := s.State.User.AvatarURL("64")
 	helpEmbed := &discordgo.MessageEmbed{
 		Title:       "Dreamer Help",
-		Description: "My prefix for commands is `&`\nReact with ❌ (:\u200Bx\u200B:) to delete generated images!",
+		Description: "My prefix for commands is `" + viper.GetString("prefix") + "`\nReact with ❌ (:\u200Bx\u200B:) to delete generated images!",
 		Thumbnail: &discordgo.MessageEmbedThumbnail{
 			URL: botAvatarURL,
 		},

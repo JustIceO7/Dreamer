@@ -38,6 +38,4 @@ Stable Diffusion: `http://localhost:7860`.
 
 `/generate <prompt>` - Generates an image from the given text prompt.
 
-`/queue` - Shows the current queue of image generation tasks.
-
 ## Go
